@@ -8,7 +8,7 @@ function [F] = F_Eight_Point(a, b)
     end
    
     % SVD of A
-    [U, S, V] = svd(A');
+    [U, S, V] = svd(A);
     
     % F is the eigenvector corresponding to the smallest Eigen Value
     F = reshape(V(:,9), 3, 3);
