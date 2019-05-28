@@ -34,8 +34,8 @@ T2 = getNormalizationTransformMtx(coordsPoints2);
 
 %% Normalizing the Point's Coordinates
 
-a = (T*coordsPoints1')';
-b = (T*coordsPoints2')';
+a = (T1*coordsPoints1')';
+b = (T2*coordsPoints2')';
 
 %% Fundamental Matrix Estimation
 
@@ -74,7 +74,28 @@ E = U * diag([1,1,0]) * V';
 
 [R, t] = decomposeEssentialMatrix(E, coordsPoints1', coordsPoints2', K);
 
+%% Linear/Algebraic Triangulation
 
+P1 = K * [eye(3), [0; 0; 0]];
+P2 = K * [R, t];
+
+X_1 = algebraicTriangulation(coordsPoints1', coordsPoints2', P1, P2);
+X_1 = X_1 ./ X_1(end,:);
+
+scatter3(X_1(1,:), X_1(2,:), X_1(3,:));
+hold on;
+
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+title('The synthetic scene and cameras');
+axis('equal');
+
+hold on;
+plotCameraFrustum(eye(3), [0; 0; 0], 'r');
+
+hold on;
+plotCameraFrustum(R, t, 'b');
 
 
 
