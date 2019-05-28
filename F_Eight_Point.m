@@ -8,10 +8,12 @@ function [F] = F_Eight_Point(a, b)
     end
    
     % SVD of A
-    [U, S, V] = svd(A);
+    [U, S, V] = svd(A');
     
     % F is the eigenvector corresponding to the smallest Eigen Value
-    F = reshape(V(:,9), 3, 3)';
+    F = reshape(V(:,9), 3, 3);
+    
+    a*F*b'
     
     % F computed above may not be a rank(2) matrix. 
     % F has to be rank(2), so set the smallest Eigen Value of the svd of F

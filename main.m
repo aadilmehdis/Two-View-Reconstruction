@@ -39,5 +39,42 @@ b = (T*coordsPoints2')';
 
 %% Fundamental Matrix Estimation
 
-F = F_Eight_Point(a, b);
+Fnormalized = F_Eight_Point(a(1:8,:), b(1:8,:));
+F = T1' * Fnormalized * T2;
+
+%% Essential Matrix Computation from Fundamental Matrix
+
+% Calibration Matrix
+K = [558.7087, 0.0, 310.3210; 0.0, 558.2827, 240.2395; 0.0, 0.0, 1.0];
+
+Eapproximate = K' * F * K;
+
+% Forcing the constraints of the svd decomposition's diagonal values as
+% 1,1,0
+
+[U, S, V] = svd(Eapproximate);
+E = U * diag([1,1,0]) * V';
+
+%% Obtaining R and t from Essential Matrix
+
+% Z = [0,1,0;-1,0,0;0,0,0];
+% W = [0,-1,0;1,0,0;0,0,0];
+% 
+% S1B = U*Z*U';
+% S2B = U*Z'*U';
+% R1  = U*W*V';
+% R2  = U*W'*V';
+% 
+% E1 = S1B*R1;
+% E2 = S2B*R1;
+% E3 = S1B*R2;
+% E4 = S2B*R2;
+
+% [relativeOrientation,relativeLocation] = relativeCameraPose(E,K,inlierPoints1,inlierPoints2);
+
+[R, t] = decomposeEssentialMatrix(E, coordsPoints1', coordsPoints2', K);
+
+
+
+
 
