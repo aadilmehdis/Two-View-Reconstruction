@@ -4,7 +4,7 @@ function [F] = F_Eight_Point(a, b)
     
     % A is the equation matrix of dimension N*9
     for i = 1:size(a,1)
-        A(n, :) = kron(b(i,:),a(i,:));
+        A(i, :) = kron(b(i,:),a(i,:));
     end
    
     % SVD of A
@@ -17,6 +17,6 @@ function [F] = F_Eight_Point(a, b)
     % F has to be rank(2), so set the smallest Eigen Value of the svd of F
     % to zero and recompute F
     [Uf, Sf, Vf] = svd(F);
-    F = Uf * [Sf(1,1), Sf(2,2), 0]' * Vf';
+    F = Uf * diag([Sf(1,1), Sf(2,2), 0]) * Vf';
     
 end
