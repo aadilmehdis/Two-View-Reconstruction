@@ -1,4 +1,9 @@
-% Reading the images
+%% Clearing Memory
+clear all;
+close all;
+clc;
+
+%% Reading the images
 img1 = rgb2gray(imread('img1.png'));
 img2 = rgb2gray(imread('img2.png'));
 
