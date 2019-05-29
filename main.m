@@ -44,7 +44,12 @@ b = (T2*coordsPoints2')';
 
 %% Fundamental Matrix Estimation
 
-Fnormalized = F_Eight_Point(a(1:8,:), b(1:8,:));
+% Without RANSAC
+% Fnormalized = F_Eight_Point(a(1:8,:), b(1:8,:));
+
+% With RANSAC
+Fnormalized = F_RANSAC_Computation(a, b, 100, 0.01);
+
 F = T1' * Fnormalized * T2;
 
 %% Essential Matrix Computation from Fundamental Matrix
@@ -93,7 +98,7 @@ hold on;
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
-title('The synthetic scene and cameras');
+title('Camera 1: RED | Camera 2: BLUE');
 axis('equal');
 
 hold on;

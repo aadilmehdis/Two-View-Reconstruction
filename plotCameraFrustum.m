@@ -6,7 +6,7 @@ function [] = plotCameraFrustum(R, camLoc, color)
 % centre in the world frame.
 
 % Size unit of the frustum
-frustumSize = 0.25;
+frustumSize = 0.5;
 
 % Vertices of the frustum. The first vertex is the camera center. Vertices
 % 2, 3, 4, 5 are the top-left, top-right, bottom-right, and bottom-left
