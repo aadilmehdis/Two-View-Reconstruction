@@ -44,13 +44,10 @@ b = (T2*coordsPoints2')';
 
 %% Fundamental Matrix Estimation
 
-% Without RANSAC
-% Fnormalized = F_Eight_Point(a(1:8,:), b(1:8,:));
-
 % With RANSAC
-Fnormalized = F_RANSAC_Computation(a, b, 100, 0.01);
+Fnormalized = F_RANSAC_Computation(a, b, 1000, 0.05);
 
-F = T1' * Fnormalized * T2;
+F = T2' * Fnormalized * T1;
 
 %% Essential Matrix Computation from Fundamental Matrix
 
@@ -65,47 +62,39 @@ Eapproximate = K' * F * K;
 [U, S, V] = svd(Eapproximate);
 E = U * diag([1,1,0]) * V';
 
+% Uncomment the following line without forcing the svd constraint on E 
+% E = Eapproximate;
+
 %% Obtaining R and t from Essential Matrix
 
-% Z = [0,1,0;-1,0,0;0,0,0];
-% W = [0,-1,0;1,0,0;0,0,0];
-% 
-% S1B = U*Z*U';
-% S2B = U*Z'*U';
-% R1  = U*W*V';
-% R2  = U*W'*V';
-% 
-% E1 = S1B*R1;
-% E2 = S2B*R1;
-% E3 = S1B*R2;
-% E4 = S2B*R2;
+intrinsics = cameraIntrinsics([558.7087, 558.2827],[310.3210, 240.2395],[480, 640]);
 
-% [relativeOrientation,relativeLocation] = relativeCameraPose(E,K,inlierPoints1,inlierPoints2);
-
-[R, t] = decomposeEssentialMatrix(E, coordsPoints1', coordsPoints2', K);
+[R,t] = relativeCameraPose(E,intrinsics,matchedPoints1,matchedPoints2);
+t = t';
 
 %% Linear/Algebraic Triangulation
 
 P1 = K * [eye(3), [0; 0; 0]];
-P2 = K * [R, t];
+P2 = K * R * [eye(3), t];
 
 X_1 = algebraicTriangulation(coordsPoints1', coordsPoints2', P1, P2);
-X_1 = X_1 ./ X_1(end,:);
+X_1 = X_1 ./ repmat(X_1(4,:), 4, 1);
 
-scatter3(X_1(1,:), X_1(2,:), X_1(3,:));
+scatter3(X_1(1,:), X_1(2,:), X_1(3,:),17, 'MarkerFaceColor',[0 .75 .75]);
 hold on;
 
 xlabel('X');
 ylabel('Y');
 zlabel('Z');
-title('Camera 1: RED | Camera 2: BLUE');
+% title('Camera 1: RED | Camera 2: BLUE');
 axis('equal');
+axis([-5 5 -5 5 -8 1])
 
 hold on;
 plotCameraFrustum(eye(3), [0; 0; 0], 'r');
-
+pause()
 hold on;
-plotCameraFrustum(R, t, 'b');
+plotCameraFrustum(R, t,'b');
 
 
 

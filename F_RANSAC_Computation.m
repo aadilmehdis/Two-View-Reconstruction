@@ -6,6 +6,7 @@ function [F] = F_RANSAC_Computation(xs, xss, n_iters, thresh)
     % thresh : Inlier threshold 
     
     max_inliers = -Inf;
+    inliers = [];
     
     for i = 1:n_iters
         
@@ -16,17 +17,12 @@ function [F] = F_RANSAC_Computation(xs, xss, n_iters, thresh)
         % Computing Fundamental Matrix from the chosen 8 points
         Fa = F_Eight_Point(xs(indices,:), xss(indices,:));
         
-        % Counting the number of inliers
-        n_inliers = 0;
-
-        for j = 1:size(xs, 1)
-            if abs(xs(j,:) * Fa * xss(j,:)') <= thresh
-                n_inliers = n_inliers + 1;
-            end
-        end
+        % Calculating the error 
+        err = sum((xss .* (Fa * xs')'),2);
         
-        % Check if the number of inliers in this iteration is the best
-        % uptil now
+        % Counting the number of inliers
+        n_inliers = size( find(abs(err) <= thresh) , 1);
+
         if n_inliers > max_inliers
             max_inliers = n_inliers;
             F = Fa;

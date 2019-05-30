@@ -34,7 +34,7 @@ R_guess_2 = U * W' * V';
 R_guess_2 = R_guess_2 * sign(det(R_guess_2)) * sign(det(K));
 
 % Initialize the projection matrices for the 4 solutions.
-P1 = K * [eye(3), [0; 0; 0]];
+P1 =  K * [eye(3), [0; 0; 0]];
 P21 = K * [R_guess_1, t_guess];
 P22 = K * [R_guess_1, -t_guess];
 P23 = K * [R_guess_2, t_guess];
