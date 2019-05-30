@@ -17,9 +17,8 @@ frustumVertices = [0, 0, 0;   -frustumSize, -0.5*frustumSize, frustumSize; ...
     -1*frustumSize, 0.5*frustumSize, frustumSize]';
 
 % Convert the frustum to world coordinates
-repmat(camLoc, 1, 5)
 frustumVertices = R*frustumVertices + repmat(camLoc, 1, 5);
-frustumVertices = -frustumVertices;
+frustumVertices = double(-frustumVertices);
 
 % Plot the frustum
 frustumEdges = [1,2; 1,3; 1,4; 1,5; 2,3; 3,4; 4,5; 5,2];

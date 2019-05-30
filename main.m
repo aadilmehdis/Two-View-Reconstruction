@@ -88,13 +88,12 @@ ylabel('Y');
 zlabel('Z');
 % title('Camera 1: RED | Camera 2: BLUE');
 axis('equal');
-axis([-5 5 -5 5 -8 1])
+axis([-5 5 -5 5 -15 1])
 
 hold on;
 plotCameraFrustum(eye(3), [0; 0; 0], 'r');
-pause()
 hold on;
-plotCameraFrustum(R, t,'b');
+plotCameraFrustum(R, R*t,'b');
 
 
 
